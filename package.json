@@ -1,0 +1,18 @@
+{
+  "name": "ghcp-hands-on",
+  "version": "1.0.0",
+  "description": "GitHub Copilot Hands-On Exercises — AI-Assisted Development",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage --verbose",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ --ext .js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.56.0"
+  },
+  "keywords": ["github-copilot", "hands-on", "exercises"],
+  "license": "MIT"
+}
