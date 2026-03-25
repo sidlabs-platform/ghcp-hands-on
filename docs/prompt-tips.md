@@ -162,6 +162,72 @@ Treat the conversation as a collaboration — each follow-up sharpens the output
 
 ---
 
+## 8. MCP-Aware Prompting
+
+When MCP servers are configured (see `.vscode/mcp.json`), Copilot gains access to external tools. Here's how to prompt effectively:
+
+### Natural Language Triggers MCP Tools
+
+You don't need to know tool names — just describe what you need:
+
+| What You Say | MCP Server Used | Tool Called |
+|-------------|----------------|------------|
+| "What issues are open in this repo?" | GitHub | `list_issues` |
+| "Fetch the React docs for useEffect" | Fetch | `fetch_url` |
+| "Take a screenshot of localhost:3000" | Playwright | `screenshot` |
+| "Look up the latest Express.js API docs" | Context7 | `resolve-library-docs` |
+| "Remember that we use UTC timestamps" | Memory | `create_entity` |
+
+### Multi-Server Workflows
+
+Combine MCP tools in a single prompt for powerful workflows:
+
+```
+Search this repo for functions marked TODO, then fetch the Jest docs
+for the assertion matchers we'll need to test them.
+```
+
+```
+Find the open bugs in this repo, check which files they reference,
+and generate a test plan for each.
+```
+
+### Tips for MCP Prompting
+
+- **Be explicit about the data source** — "Check GitHub for…" vs "Search the codebase for…" helps Copilot pick the right tool.
+- **Chain requests naturally** — "Fetch X, then use it to do Y" works well.
+- **Specify output format** — "Show results as a markdown table" keeps MCP results readable.
+- **Use for verification** — "Fetch the official docs and confirm our implementation matches the spec."
+- **Combine with skills** — "Using the security-review skill, audit UserService.js. Then search GitHub for any related open issues."
+
+### When MCP Adds the Most Value
+
+| Scenario | Without MCP | With MCP |
+|----------|-------------|----------|
+| API docs lookup | Copilot guesses from training data | Fetches current docs from source |
+| Bug triage | Manual GitHub browsing | "Show open bugs with labels and assignees" |
+| E2E testing | Write tests manually | Playwright navigates and generates assertions |
+| Cross-repo search | Open GitHub in browser | "Search org repos for usage of our shared auth module" |
+| Architecture decisions | Memory lost between sessions | Memory MCP persists decisions |
+
+---
+
+## Quick Reference Card
+
+```
+┌─────────────────────────────────────────────────────┐
+│  THE 5-PART PROMPT FORMULA                          │
+│                                                     │
+│  1. CONTEXT   → What file/function/module?          │
+│  2. GOAL      → What should the result look like?   │
+│  3. EXAMPLES  → Sample input → expected output      │
+│  4. CONSTRAINTS → What to use / what to avoid       │
+│  5. VERIFY    → "Run tests" / "Show me the diff"    │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
 > **Remember:** AI-generated code is a starting point, not a final answer. Always review, test, and verify.
 
-<!-- Last updated: 2025 · GitHub Copilot Workshop -->
+<!-- Last updated: 2026 · GitHub Copilot Workshop -->

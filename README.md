@@ -6,13 +6,14 @@ Practical exercises for AI-assisted development using **GitHub Copilot**, **Copi
 
 ## Workshop Structure
 
-### Express Format (70 min) — Recommended for live sessions
+### Express Format (85 min) — Recommended for live sessions
 
 | Module | Title | Focus Area | Time |
 |--------|-------|-----------|------|
 | [Module 1](docs/module-1-express.md) | AI-Assisted Test Automation | Agent mode test gen, iterative fix loop, CI quality gate | 25 min |
 | [Module 2](docs/module-2-express.md) | Coding Agent: Task to Refactor | Coding Agent + agent mode refactoring, agent skills, PR review | 25 min |
 | [Module 3](docs/module-3-express.md) | Code Review Agent + GHAS Security | Security review skill, vulnerability fixes, CodeQL | 20 min |
+| [Module 4](docs/module-4-express.md) | Copilot Ecosystem: MCP & Plugins | MCP servers, community skills, extensions, plugin discovery | 15 min |
 
 ### Full-Length Format — Self-paced or half-day workshop
 
@@ -21,6 +22,7 @@ Practical exercises for AI-assisted development using **GitHub Copilot**, **Copi
 | [Module 1](docs/module-1-test-automation.md) | AI-Assisted Test Automation | Copilot test generation, iterative fix loop, CI quality gates | 60–90 min |
 | [Module 2](docs/module-2-coding-agent.md) | Coding Agent: Task to Refactor | Issue→PR automation, legacy code refactoring, PR auto-review | 60–90 min |
 | [Module 3](docs/module-3-security-review.md) | Code Review Agent + GHAS Security Scan | Code review agent, CodeQL vulnerability detection, AI fix verification | 60–90 min |
+| [Module 4](docs/module-4-ecosystem.md) | Copilot Ecosystem: MCP & Plugins | MCP servers, community plugins, extensions, ecosystem strategy | 45–60 min |
 
 ---
 
@@ -51,6 +53,7 @@ Practical exercises for AI-assisted development using **GitHub Copilot**, **Copi
 | Path-Specific Instructions | `.github/instructions/` | Modules 1 & 2 — test and source conventions |
 | Prompt Files | `.github/prompts/` | All modules — reusable prompt templates |
 | Agent Mode | VS Code Copilot Chat | Modules 1 & 2 — multi-step autonomous editing |
+| MCP Servers | `.vscode/mcp.json` | Module 4 — external tool integration |
 
 ---
 
@@ -110,14 +113,18 @@ ghcp-hands-on/
 │   └── workflows/
 │       ├── ci.yml                 ← Module 1: test & coverage CI
 │       └── security.yml           ← Module 3: CodeQL & dependency review
+├── .vscode/
+│   └── mcp.json                   ← NEW: MCP server configs (Module 4)
 ├── docs/
-│   ├── module-1-express.md        ← NEW: 25-min express guide
-│   ├── module-2-express.md        ← NEW: 25-min express guide
-│   ├── module-3-express.md        ← NEW: 20-min express guide
+│   ├── module-1-express.md        ← 25-min express guide
+│   ├── module-2-express.md        ← 25-min express guide
+│   ├── module-3-express.md        ← 20-min express guide
+│   ├── module-4-express.md        ← NEW: 15-min ecosystem express guide
 │   ├── module-1-test-automation.md ← Full-length guide
 │   ├── module-2-coding-agent.md   ← Full-length guide
 │   ├── module-3-security-review.md ← Full-length guide
-│   └── prompt-tips.md             ← NEW: prompt engineering cheat sheet
+│   ├── module-4-ecosystem.md      ← NEW: Full-length MCP & plugins guide
+│   └── prompt-tips.md             ← Prompt engineering cheat sheet
 ├── package.json
 ├── jest.config.js
 └── README.md                      ← You are here
@@ -157,6 +164,17 @@ ghcp-hands-on/
 
 **Key skill:** Using AI tools as one layer of defense (agent skills + CodeQL + human review), while verifying their output through testing.
 
+### Module 4 — Copilot Ecosystem: MCP Servers, Plugins & Extensions
+
+| Exercise | What You Do |
+|----------|------------|
+| **4.1** MCP Configuration | Explore `.vscode/mcp.json`, understand how Copilot discovers external tools |
+| **4.2** Popular MCP Servers | Hands-on with GitHub MCP (issues/PRs), Fetch (live docs), Playwright (browser), Context7 (library docs) |
+| **4.3** Community Skills & Extensions | Browse Awesome Copilot, install community skills, understand the extension ecosystem |
+| **4.4** Ecosystem Strategy | Build a personalized MCP + skills setup for your role (frontend, backend, DevOps, security) |
+
+**Key skill:** Extending Copilot beyond code — connecting it to live data, browsers, APIs, and community knowledge through MCP servers and plugins.
+
 ---
 
 ## Intentional Design Choices
@@ -178,10 +196,11 @@ This workshop uses **intentionally imperfect code** to create realistic learning
 4. **Agent skills showcase:** Point out the `.github/skills/` directory early — it demonstrates how teams can codify their conventions for AI assistance.
 5. **GHAS availability:** For Module 3, public repos get free CodeQL. For private repos, you need a license. Plan accordingly.
 6. **Time management:**
-   - **Express format (70 min):** Use the express module guides. Each has timing annotations. Prioritize hands-on exercises over demos.
-   - **Half-day workshop:** Pick 2 full-length modules with breaks.
-   - **Full-day workshop:** Do all 3 full-length modules with breaks.
-7. **New capabilities:** Highlight custom instructions, agent skills, and prompt files as things participants can take back to their own projects immediately.
+   - **Express format (85 min):** Use the express module guides. Each has timing annotations. Prioritize hands-on exercises over demos.
+   - **Half-day workshop:** Pick 2–3 full-length modules with breaks.
+   - **Full-day workshop:** Do all 4 full-length modules with breaks.
+7. **New capabilities:** Highlight custom instructions, agent skills, prompt files, and MCP servers as things participants can take back to their own projects immediately.
+8. **Module 4 flexibility:** Module 4 (Ecosystem) works best as a closing module after hands-on coding, but can also be a standalone demo for stakeholders or managers interested in the broader Copilot platform.
 
 ---
 
@@ -203,15 +222,62 @@ worth exploring on your own. Several are already configured in this repository.
 
 ---
 
+### 🔗 MCP — Model Context Protocol
+
+Connect Copilot to external tools: databases, APIs, documentation, CI/CD. **Module 4 covers this hands-on.**
+
+This repository ships with pre-configured MCP servers in `.vscode/mcp.json`:
+
+| MCP Server | What It Does | Config Included |
+|------------|-------------|-----------------|
+| **GitHub** | Issues, PRs, code search, Actions | ✅ |
+| **Fetch** | Retrieve web pages, API docs, any URL | ✅ |
+| **Playwright** | Browser automation, screenshots, E2E testing | ✅ |
+| **Context7** | Live, up-to-date library documentation | ✅ |
+| **Memory** | Persistent knowledge graph across sessions | ✅ |
+| **Sequential Thinking** | Structured multi-step problem solving | ✅ |
+
+📖 [MCP Server Docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) · [MCP Specification](https://modelcontextprotocol.io)
+
+---
+
+### 🌟 Popular MCP Servers Worth Adding
+
+These are widely adopted by the community and easy to set up:
+
+| Server | Use Case | Install |
+|--------|---------|---------|
+| **Docker** | Manage containers, images, compose stacks | `npx @modelcontextprotocol/server-docker` |
+| **PostgreSQL** | Query databases, inspect schemas | `npx @modelcontextprotocol/server-postgres` |
+| **Brave Search** | Web search with citations | `npx @anthropic/mcp-server-brave-search` |
+| **Filesystem** | Read/write/search local files | `npx @modelcontextprotocol/server-filesystem` |
+| **Puppeteer** | Headless browser for web scraping | `npx @anthropic/mcp-server-puppeteer` |
+| **Sentry** | Error tracking, crash analysis | `npx @sentry/mcp-server-sentry` |
+| **Linear** | Project management, issue tracking | `npx @linearapp/mcp-server` |
+| **Notion** | Knowledge base, wiki pages | `npx @notionhq/mcp-server-notion` |
+| **Slack** | Channel messages, workspace search | `npx @anthropic/mcp-server-slack` |
+| **Figma** | Design tokens, component specs | `npx @anthropic/mcp-server-figma` |
+
+📖 [Awesome MCP Servers](https://github.com/punkpeye/awesome-mcp-servers) · [MCP Registry](https://mcp.so)
+
+---
+
 ### 🧩 Agent Skills (`.github/skills/`)
 
 Modular capability packages that teach Copilot domain-specific workflows.
 This workshop includes **3 skills**: `jest-test-gen`, `js-refactor`, and `security-review`.
 
-- Create your own: add a `SKILL.md` file with YAML frontmatter and instructions
-- Skills are auto-discovered by both VS Code agent mode and Coding Agent
+Popular community skills worth exploring:
 
-📖 [About Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills)
+| Category | Skills | Description |
+|----------|--------|-------------|
+| **Testing** | `playwright-test-gen`, `cypress-e2e`, `pytest-gen` | Framework-specific test generation |
+| **Security** | `dependency-audit`, `secret-scanner`, `cve-checker` | Supply chain and secrets scanning |
+| **Documentation** | `api-docs-gen`, `readme-writer`, `adr-template` | Auto-generate project docs |
+| **DevOps** | `dockerfile-gen`, `terraform-review`, `gh-actions-gen` | Infrastructure as code guidance |
+| **Code Quality** | `performance-profiler`, `accessibility-a11y`, `i18n-checker` | Non-functional quality attributes |
+
+📖 [About Agent Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) · [Awesome Copilot](https://awesome-copilot.github.com)
 
 ---
 
@@ -252,18 +318,9 @@ Reusable, shareable prompt templates for common tasks.
 Bundle skills, agents, and MCP servers into installable packages.
 
 - Distributed via community repositories and the Awesome Copilot marketplace
+- Combine multiple capabilities into one-click installs for your team
 
 📖 [Agent Plugins](https://code.visualstudio.com/docs/copilot/customization/agent-plugins)
-
----
-
-### 🔗 MCP — Model Context Protocol
-
-Connect Copilot to external tools: databases, APIs, documentation, CI/CD.
-
-- Enables custom tool integrations beyond built-in capabilities
-
-📖 [MCP Servers](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
 
 ---
 
@@ -296,9 +353,10 @@ Community marketplace with **175+ agents**, **200+ skills**, and dozens of plugi
 | Custom Instructions | `.github/copilot-instructions.md` | ✅ Repo-wide + path-specific |
 | Agent Mode | VS Code Copilot Chat | ✅ Module 2 |
 | Prompt Files | `.github/prompts/` | ✅ 3 included |
+| MCP Servers | `.vscode/mcp.json` | ✅ 6 pre-configured (Module 4) |
 | Agent Plugins | VS Code marketplace | 🔗 Link provided |
-| MCP Servers | VS Code settings | 🔗 Link provided |
 | Copilot CLI | Terminal | 🔗 Link provided |
+| Community Skills | Awesome Copilot | ✅ Curated list (Module 4) |
 
 ---
 
