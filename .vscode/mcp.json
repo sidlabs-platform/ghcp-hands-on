@@ -1,0 +1,59 @@
+{
+  // MCP Server Configuration for GitHub Copilot
+  // These servers extend Copilot with external tool access.
+  // See: https://code.visualstudio.com/docs/copilot/chat/mcp-servers
+  "servers": {
+    // GitHub — Query issues, PRs, commits, code search, Actions
+    // Docs: https://github.com/modelcontextprotocol/servers/tree/main/src/github
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github-token}"
+      }
+    },
+
+    // Fetch — Retrieve web pages, API docs, any URL content
+    // Docs: https://github.com/modelcontextprotocol/servers/tree/main/src/fetch
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+    },
+
+    // Playwright — Browser automation, screenshots, E2E testing
+    // Docs: https://github.com/anthropics/mcp-playwright
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-playwright"]
+    },
+
+    // Context7 — Pull up-to-date library documentation into context
+    // Docs: https://github.com/nicepkg/context7
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@nicepkg/context7-mcp"]
+    },
+
+    // Memory — Persistent knowledge graph across sessions
+    // Docs: https://github.com/modelcontextprotocol/servers/tree/main/src/memory
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+
+    // Sequential Thinking — Structured multi-step problem solving
+    // Docs: https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  },
+  "inputs": [
+    {
+      "id": "github-token",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (for GitHub MCP server)",
+      "password": true
+    }
+  ]
+}

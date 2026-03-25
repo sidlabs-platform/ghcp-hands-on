@@ -5,7 +5,7 @@ module.exports = {
     'src/**/*.js',
     '!src/index.js'
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 80,
       functions: 80,
