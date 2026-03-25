@@ -36,6 +36,7 @@ let orderCounter = 1000;
 function validateCustomerInfo(customerInfo) {
   if (!customerInfo.name) return { valid: false, error: 'Customer name is required' };
   if (!customerInfo.email) return { valid: false, error: 'Customer email is required' };
+  if (!customerInfo.email.includes('@')) return { valid: false, error: 'Invalid email format' };
   if (!customerInfo.address) return { valid: false, error: 'Customer address is required' };
   if (!customerInfo.address.street) return { valid: false, error: 'Street address is required' };
   if (!customerInfo.address.city) return { valid: false, error: 'City is required' };
@@ -52,7 +53,11 @@ function validateCustomerInfo(customerInfo) {
 function validatePaymentInfo(paymentInfo) {
   if (!paymentInfo.cardNumber) return { valid: false, error: 'Card number is required' };
   if (!paymentInfo.expiry) return { valid: false, error: 'Card expiry is required' };
+  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(paymentInfo.expiry)) {
+    return { valid: false, error: 'Expiry must be in MM/YY format' };
+  }
   if (!paymentInfo.cvv) return { valid: false, error: 'CVV is required' };
+  if (!/^\d{3,4}$/.test(paymentInfo.cvv)) return { valid: false, error: 'CVV must be 3 or 4 digits' };
   const cleanCard = paymentInfo.cardNumber.replace(/[\s-]/g, '');
   if (cleanCard.length < MIN_CARD_LENGTH || cleanCard.length > MAX_CARD_LENGTH) {
     return { valid: false, error: 'Invalid card number' };
@@ -250,6 +255,7 @@ module.exports = {
   processOrder,
   getOrderStatus,
   cancelOrder,
+  // Internal functions exported for testing
   validateCustomerInfo,
   validatePaymentInfo,
   validateCart,

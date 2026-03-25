@@ -91,6 +91,12 @@ describe('validateCustomerInfo', () => {
 
     expect(result).toEqual({ valid: false, error: 'ZIP code is required' });
   });
+
+  test('should return error when email has no @ symbol', () => {
+    const result = validateCustomerInfo(makeCustomer({ email: 'invalidemail' }));
+
+    expect(result).toEqual({ valid: false, error: 'Invalid email format' });
+  });
 });
 
 // ─── validatePaymentInfo ───────────────────────────────────────────────────────
@@ -136,6 +142,45 @@ describe('validatePaymentInfo', () => {
     const result = validatePaymentInfo(makePayment({ cardNumber: '4111-1111-1111-1111' }));
 
     expect(result).toEqual({ valid: true });
+  });
+
+  test('should return error when CVV is not 3-4 digits', () => {
+    expect(validatePaymentInfo(makePayment({ cvv: '12' }))).toEqual({
+      valid: false,
+      error: 'CVV must be 3 or 4 digits'
+    });
+    expect(validatePaymentInfo(makePayment({ cvv: '12345' }))).toEqual({
+      valid: false,
+      error: 'CVV must be 3 or 4 digits'
+    });
+    expect(validatePaymentInfo(makePayment({ cvv: 'abc' }))).toEqual({
+      valid: false,
+      error: 'CVV must be 3 or 4 digits'
+    });
+  });
+
+  test('should accept valid CVV with 3 or 4 digits', () => {
+    expect(validatePaymentInfo(makePayment({ cvv: '123' }))).toEqual({ valid: true });
+    expect(validatePaymentInfo(makePayment({ cvv: '1234' }))).toEqual({ valid: true });
+  });
+
+  test('should return error when expiry is not in MM/YY format', () => {
+    expect(validatePaymentInfo(makePayment({ expiry: '13/27' }))).toEqual({
+      valid: false,
+      error: 'Expiry must be in MM/YY format'
+    });
+    expect(validatePaymentInfo(makePayment({ expiry: '00/27' }))).toEqual({
+      valid: false,
+      error: 'Expiry must be in MM/YY format'
+    });
+    expect(validatePaymentInfo(makePayment({ expiry: '12/2027' }))).toEqual({
+      valid: false,
+      error: 'Expiry must be in MM/YY format'
+    });
+    expect(validatePaymentInfo(makePayment({ expiry: '1/27' }))).toEqual({
+      valid: false,
+      error: 'Expiry must be in MM/YY format'
+    });
   });
 });
 
