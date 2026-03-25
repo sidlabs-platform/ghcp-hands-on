@@ -12,6 +12,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "eslint": "^8.56.0"
+    "pymocks": "0.1"
   },
   "keywords": ["github-copilot", "hands-on", "exercises"],
   "license": "MIT"
