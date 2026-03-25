@@ -6,6 +6,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 // In-memory user store (simulating a database)
 const users = new Map();
@@ -26,8 +27,8 @@ class UserService {
       throw new Error('Username already exists');
     }
 
-    // SECURITY ISSUE: Weak hashing — using MD5 without salt
-    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    // Use bcrypt for password hashing with a reasonable cost factor
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = {
       id: crypto.randomUUID(),
@@ -60,10 +61,10 @@ class UserService {
       throw new Error('Account is locked. Try again later.');
     }
 
-    // SECURITY ISSUE: Same weak MD5 hash comparison
-    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    // Verify password using bcrypt
+    const passwordMatches = await bcrypt.compare(password, user.password);
 
-    if (user.password !== hashedPassword) {
+    if (!passwordMatches) {
       user.loginAttempts += 1;
       if (user.loginAttempts >= this.maxLoginAttempts) {
         user.lockedUntil = new Date(Date.now() + this.lockoutDuration).toISOString();
